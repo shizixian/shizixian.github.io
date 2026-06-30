@@ -4,304 +4,799 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>史子贤 | Shi Zixian</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:       #0A1628;
+      --navy-mid:   #0D1F38;
+      --teal:       #00D4AA;
+      --teal-glow:  rgba(0, 212, 170, 0.12);
+      --off-white:  #F7F7F2;
+      --text-muted: rgba(247, 247, 242, 0.68);
+      --card-bg:    rgba(0, 212, 170, 0.06);
+      --card-border:rgba(0, 212, 170, 0.15);
+    }
+    html { scroll-behavior: smooth; background: var(--navy); }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--off-white);
+      background: var(--navy);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
+    }
+    .cursor-glow {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      left: 50%; top: 50%;
+      background: radial-gradient(circle, rgba(0,212,170,0.06) 0%, transparent 60%);
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.6s;
+    }
+    .cursor-glow.visible { opacity: 1; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .container-sm { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+    /* ===== Lang Switcher ===== */
+    .lang-nav { position: fixed; top: 0; right: 0; z-index: 100; padding: 20px 24px; }
+    /* ===== Scroll Nav Arrows ===== */
+    .scroll-nav {
+      position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+      z-index: 99; display: flex; flex-direction: column; gap: 12px;
+      transition: opacity 0.4s ease;
+    }
+    .scroll-nav.hidden { opacity: 0; pointer-events: none; }
+    .scroll-nav button {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--teal); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+    .scroll-nav button:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); }
+    .scroll-nav button svg { width: 18px; height: 18px; stroke: var(--teal); fill: none; }
+    @media (max-width: 900px) { .scroll-nav { right: 8px; gap: 8px; } .scroll-nav button { width: 34px; height: 34px; } }
+    .lang-toggle {
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      color: var(--off-white); font-size: 13px; font-weight: 500;
+      font-family: 'Inter', -apple-system, sans-serif;
+      padding: 8px 16px; border-radius: 20px; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
+      transition: background 0.2s, border-color 0.2s;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+    .lang-toggle:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); }
+    .lang-toggle .divider { width: 1px; height: 14px; background: rgba(255,255,255,0.2); }
+    .lang-toggle .active-lang { color: var(--teal); font-weight: 600; }
+
+    /* ===== Typography ===== */
+    .eyebrow {
+      font-size: 13px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.2em; color: var(--teal); margin-bottom: 20px;
+    }
+    .section { padding: 120px 24px; position: relative; z-index: 1; }
+    .section-alt { background: var(--navy-mid); }
+    .section-title {
+      font-size: clamp(36px, 5vw, 56px); font-weight: 800;
+      color: var(--off-white); margin-bottom: 16px; line-height: 1.1;
+    }
+    .section-subtitle {
+      font-size: 17px; color: var(--text-muted); max-width: 520px;
+      margin-bottom: 56px; line-height: 1.6;
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      justify-content: center; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero .container { position: relative; z-index: 2; max-width: 720px; }
+    .hero h1 {
+      font-size: clamp(52px, 8vw, 82px); font-weight: 800;
+      color: var(--off-white); line-height: 1.06; margin-bottom: 16px;
+    }
+    .hero-sub {
+      font-size: 20px; color: rgba(247,247,242,0.55); font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .hero-tagline {
+      font-size: 18px; color: var(--teal); font-weight: 500; margin-bottom: 44px;
+    }
+    .btn-primary {
+      display: inline-block; padding: 16px 40px;
+      background: var(--teal); color: var(--navy);
+      text-decoration: none; border-radius: 8px;
+      font-size: 16px; font-weight: 600;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,170,0.3); }
+
+    /* Hero shapes */
+    .hero-shapes-back, .hero-shapes-mid { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+    .shape-a {
+      position: absolute; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,170,0.08) 0%, transparent 70%);
+      top: -15%; left: -10%;
+    }
+    .shape-b {
+      position: absolute; width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,212,170,0.06) 0%, transparent 70%);
+      bottom: 10%; right: -8%;
+    }
+    .shape-c {
+      position: absolute; width: 180px; height: 180px;
+      border: 1px solid rgba(0,212,170,0.12); border-radius: 50%;
+      top: 55%; left: 12%;
+    }
+    .shape-d {
+      position: absolute; width: 120px; height: 120px;
+      background: rgba(0,212,170,0.04); border-radius: 24px;
+      transform: rotate(45deg); top: 20%; right: 15%;
+    }
+
+    .scroll-down {
+      position: absolute; bottom: 36px; left: 50%;
+      transform: translateX(-50%); z-index: 2;
+    }
+    .scroll-down svg { width: 24px; height: 24px; stroke: var(--teal); }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+    .scroll-down { animation: bounce 2s ease-in-out infinite; }
+
+    /* ===== About ===== */
+    .about-grid { display: flex; gap: 56px; align-items: flex-start; }
+    .about-text { flex: 1; }
+    .about-text p { margin-bottom: 20px; color: var(--text-muted); font-size: 16px; line-height: 1.75; }
+    .about-stats { display: flex; gap: 20px; flex-shrink: 0; }
+    .stat {
+      text-align: center; padding: 28px 28px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; min-width: 100px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .stat:hover { transform: translateY(-4px); border-color: var(--teal); }
+    .stat-num { display: block; font-size: 32px; font-weight: 800; color: var(--teal); }
+    .stat-label { display: block; font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
+    /* ===== Timeline Cards (Education, Activities) ===== */
+    .timeline-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; padding: 28px 32px; margin-bottom: 16px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .timeline-card:hover { transform: translateX(4px); border-color: var(--teal); }
+    .timeline-card.highlight { border-left: 3px solid var(--teal); }
+    .timeline-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .timeline-header h3 { font-size: 18px; font-weight: 700; color: var(--off-white); }
+    .timeline-date { font-size: 13px; color: var(--teal); font-weight: 600; white-space: nowrap; margin-left: auto; min-width: 48px; text-align: right; flex-shrink: 0; }
+    .timeline-detail { color: var(--text-muted); font-size: 14px; }
+    .timeline-meta { color: var(--teal); font-weight: 600; font-size: 14px; margin-top: 6px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .tag-list span {
+      background: rgba(0,212,170,0.08); padding: 4px 12px;
+      border-radius: 6px; font-size: 12px; color: var(--text-muted);
+    }
+
+    /* ===== Grid Cards (Achievements, Projects, Skills) ===== */
+    .card-grid { display: grid; gap: 20px; }
+    .card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 32px 28px;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .card:hover { transform: translateY(-6px); border-color: var(--teal); }
+    .card.center { text-align: center; }
+    .card-icon { font-size: 36px; margin-bottom: 12px; }
+    .card h3 { font-size: 17px; font-weight: 700; color: var(--off-white); margin-bottom: 8px; }
+    .card .highlight-text { font-weight: 600; color: var(--teal); font-size: 14px; margin-bottom: 4px; }
+    .card .muted-text { color: var(--text-muted); font-size: 13px; }
+    .card p.desc { color: var(--text-muted); font-size: 14px; line-height: 1.65; margin-bottom: 12px; }
+    .card.featured {
+      background: linear-gradient(135deg, #0A1628, #122540);
+      border-color: rgba(0,212,170,0.3);
+    }
+
+    /* ===== Activities Row ===== */
+    .act-row { display: flex; gap: 20px; padding: 24px 28px; }
+    .act-row .act-icon { font-size: 24px; flex-shrink: 0; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: var(--card-bg); border-radius: 12px; }
+    .act-row .act-body h4 { font-size: 15px; font-weight: 700; color: var(--off-white); margin-bottom: 4px; }
+    .act-row .act-body p { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+
+    /* ===== Skills Inline ===== */
+    .skill-blocks { display: flex; flex-wrap: wrap; gap: 10px; }
+    .skill-blocks span {
+      background: rgba(0,212,170,0.08); padding: 8px 18px;
+      border-radius: 8px; font-size: 14px; color: var(--text-muted);
+      border: 1px solid rgba(0,212,170,0.08);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .skill-blocks span:hover { border-color: var(--teal); color: var(--off-white); }
+    /* Decorative frame for skill cards */
+    .card.skill-frame {
+      border: 1px solid rgba(0,212,170,0.15);
+      background:
+        linear-gradient(to right, rgba(0,212,170,0.06) 1px, transparent 1px) 0 0 / 8px 100%,
+        linear-gradient(to bottom, rgba(0,212,170,0.06) 1px, transparent 1px) 0 0 / 100% 8px,
+        linear-gradient(to right, rgba(0,212,170,0.06) 1px, transparent 1px) 100% 100% / 8px 100%,
+        linear-gradient(to bottom, rgba(0,212,170,0.06) 1px, transparent 1px) 100% 100% / 100% 8px,
+        rgba(0,212,170,0.02);
+      background-repeat: no-repeat;
+      padding-top: 36px;
+      padding-bottom: 36px;
+    }
+    /* Decorative placeholder card */
+    .card.placeholder-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed rgba(0,212,170,0.15);
+      background: rgba(0,212,170,0.015);
+      min-height: 100%;
+      cursor: default;
+      pointer-events: none;
+    }
+    .card.placeholder-card:hover { transform: none; border-color: rgba(0,212,170,0.15); }
+    .card.placeholder-card .big-dots {
+      font-size: 48px;
+      letter-spacing: 12px;
+      color: rgba(0,212,170,0.2);
+      user-select: none;
+    }
+
+    /* ===== Contact ===== */
+    .contact-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .contact-pill {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 28px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      color: var(--off-white); text-decoration: none; border-radius: 12px;
+      font-size: 15px; font-weight: 500;
+      transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+    .contact-pill:hover { transform: translateY(-3px); border-color: var(--teal); background: rgba(0,212,170,0.1); }
+    .contact-pill svg { stroke: var(--teal); flex-shrink: 0; }
+    .contact-pill svg[fill="currentColor"] { stroke: none; fill: var(--teal); }
+
+    /* ===== CTA Glow ===== */
+    .cta-glow {
+      display: inline-block; position: relative; margin-top: 12px;
+    }
+    .cta-glow::before {
+      content: ''; position: absolute; inset: -40px;
+      background: radial-gradient(circle, var(--teal-glow) 0%, transparent 70%);
+      border-radius: 50%; pointer-events: none;
+    }
+
+    /* ===== Floating shapes ===== */
+    @keyframes floatA { 0%,100%{transform:translate(0,0) rotate(0deg)} 50%{transform:translate(25px,-35px) rotate(8deg)} }
+    @keyframes floatB { 0%,100%{transform:translate(0,0) rotate(0deg)} 50%{transform:translate(-20px,25px) rotate(-6deg)} }
+    @keyframes floatC { 0%,100%{transform:translate(0,0) rotate(45deg)} 50%{transform:translate(15px,-20px) rotate(55deg)} }
+    .hero-shapes-back .shape-a { animation: floatA 12s ease-in-out infinite; }
+    .hero-shapes-back .shape-b { animation: floatB 16s ease-in-out infinite; }
+    .hero-shapes-mid .shape-c { animation: floatB 10s ease-in-out infinite; }
+    .hero-shapes-mid .shape-d { animation: floatC 14s ease-in-out infinite; }
+
+    /* ===== Footer ===== */
+    .footer { text-align: center; padding: 36px 24px; color: rgba(247,247,242,0.3); font-size: 13px; background: var(--navy); }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .card-grid.cols-3, .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { flex-direction: column; gap: 32px; }
+      .about-stats { justify-content: center; }
+      .section { padding: 80px 24px; }
+    }
+    @media (max-width: 580px) {
+      .card-grid.cols-2, .card-grid.cols-3, .card-grid.cols-4 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 44px; }
+      .section-title { font-size: 30px; }
+      .timeline-header { flex-direction: column; gap: 4px; }
+      .timeline-date { margin-left: 0; }
+      .contact-row { flex-direction: column; align-items: center; }
+      .lang-nav { padding: 14px 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-shapes-back *, .hero-shapes-mid * { animation: none; }
+      .scroll-down { animation: none; }
+      .card, .stat, .timeline-card, .contact-pill, .btn-primary { transition: none; }
+    }
+  </style>
 </head>
 <body>
 
-  <nav class="navbar">
-    <div class="nav-inner">
-      <span class="nav-logo">SZ</span>
-      <ul class="nav-links">
-        <li><a href="#about">关于</a></li>
-        <li><a href="#education">教育</a></li>
-        <li><a href="#achievements">成就</a></li>
-        <li><a href="#projects">项目</a></li>
-        <li><a href="#skills">技能</a></li>
-      <li><a href="#contact">联系</a></li>
-      <li><a href="#activities">活动</a></li>
-      </ul>
-    </div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <div class="scroll-nav" id="scrollNav">
+    <button id="scrollUp" aria-label="Scroll up"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg></button>
+    <button id="scrollDown" aria-label="Scroll down"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+  </div>
+
+  <nav class="lang-nav">
+    <button class="lang-toggle" id="langToggle" aria-label="Switch language">
+      <span class="active-lang" data-lang-label="zh">中</span>
+      <span class="divider"></span>
+      <span data-lang-label="en">EN</span>
+    </button>
   </nav>
 
+  <!-- ===== Hero ===== -->
   <section class="hero">
-    <div class="hero-content">
-      <h1>史子贤</h1>
-      <p class="hero-sub">Shi Zixian</p>
-      <p class="hero-tagline">A-Level 学生 · 电子工程申请者 · 硬件极客</p>
-      <p class="hero-desc">A-Level Student · EEE Applicant · Hardware Geek</p>
-      <a href="#achievements" class="btn-primary">查看成就</a>
+    <div class="hero-shapes-back">
+      <div class="shape-a"></div>
+      <div class="shape-b"></div>
+    </div>
+    <div class="hero-shapes-mid">
+      <div class="shape-c"></div>
+      <div class="shape-d"></div>
+    </div>
+    <div class="container">
+      <p class="hero-sub" data-i18n="hero-sub">Shi Zixian</p>
+      <h1 data-i18n="hero-name">史子贤</h1>
+      <p class="hero-tagline" data-i18n="hero-tagline">A-Level 学生 · 硬件极客</p>
+      <a href="#about" class="btn-primary" data-i18n="hero-cta">了解更多</a>
+    </div>
+    <div class="scroll-down">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
     </div>
   </section>
 
+  <!-- ===== About ===== -->
   <section id="about" class="section">
-    <div class="section-inner">
-      <h2 class="section-title">关于我</h2>
+    <div class="container-sm">
+      <h2 class="section-title" data-i18n="about-title">从十岁开始折腾硬件</h2>
+      <p class="section-subtitle" data-i18n="about-subtitle">北京新东方扬州外国语学校 A-Level 在读，2027 年毕业。多项全球金奖得主，正在通过 UCAS 申请英国及香港的电子与电气工程专业。</p>
       <div class="about-grid">
         <div class="about-text">
-          <p>我就读于北京新东方扬州外国语学校国际高中，目前学习 A-Level 课程（数学、进阶数学、物理、化学），2027 年毕业。</p>
-          <p>我对电子工程和计算机硬件充满热情，从 10 岁起就开始自己动手组装电脑、折腾系统。曾获英国物理挑战赛（JPC）全球金奖、英国数学测评（SMC）全球金奖及全校最佳。目前正在通过 UCAS 申请英国及香港的电子与电气工程（EEE）专业。</p>
-          <p>课余时间我喜欢折腾技术——用 Kotlin 开发 Android 应用、组装 PC、给手机刷机越狱、玩树莓派和 OpenWrt 路由器。也独立开发了一款休闲消除游戏《FLUFFY 羊羊乐》并开源在 GitHub。</p>
+          <p data-i18n="about-p2">从 10 岁自己动手组装第一台电脑起，我就对硬件和底层系统着迷。这份热情驱动我拿下 SMC 全球金奖（学校最佳）、SPC 全球金奖、JPC 全球金奖、Physics Bowl 全球银奖。</p>
+          <p data-i18n="about-p3">课余时间用 Kotlin 写 Android 应用、用 Godot 开发独立游戏《FLUFFY 羊羊乐》、组装 Xeon 工作站、给手机刷机越狱、搭 OpenWrt 旁路由。也喜欢折腾树莓派——跑 Pi-hole、XRDP 远程桌面、当无头服务器。</p>
         </div>
         <div class="about-stats">
-          <div class="stat" style="display:none">
-            <span class="stat-num">5+</span>
-            <span class="stat-label">学术奖项</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num">2</span>
-            <span class="stat-label">独立项目</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num">4</span>
-            <span class="stat-label">A-Level 科目</span>
-          </div>
+          <div class="stat"><span class="stat-num">6</span><span class="stat-label" data-i18n="stat-awards">学术奖项</span></div>
+          <div class="stat"><span class="stat-num">4</span><span class="stat-label" data-i18n="stat-subjects">A-Level 科目</span></div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ===== Education ===== -->
   <section id="education" class="section section-alt">
-    <div class="section-inner">
-      <h2 class="section-title">教育背景</h2>
-      <div class="edu-card">
-        <div class="edu-header">
-          <h3>北京新东方扬州外国语学校 · 国际高中</h3>
-          <span class="edu-date">2024 – 2027</span>
-        </div>
-        <p class="edu-detail">A-Level 课程（Edexcel 考试局）</p>
-        <ul class="edu-subjects">
-          <li>数学 Mathematics</li>
-          <li>进阶数学 Further Mathematics</li>
-          <li>物理 Physics</li>
-          <li>化学 Chemistry</li>
-        </ul>
-      </div>
-      <div class="edu-card">
-        <div class="edu-header">
-          <h3>北京新东方扬州外国语学校 · 国际初中</h3>
-          <span class="edu-date">2021 – 2024</span>
+    <div class="container-sm">
+      <h2 class="section-title" data-i18n="edu-title">教育背景</h2>
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <h3 data-i18n="edu-primary">扬州育才实验学校（小学）</h3>
+          <span class="timeline-date">2015 – 2021</span>
         </div>
       </div>
-      <div class="edu-card">
-        <div class="edu-header">
-          <h3>扬州育才实验学校（小学）</h3>
-          <span class="edu-date">2015 – 2021</span>
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <h3 data-i18n="edu-middle">北京新东方扬州外国语学校 · 国际初中</h3>
+          <span class="timeline-date">2021 – 2024</span>
         </div>
       </div>
-      <div class="edu-card" style="background:#e8f0fe;border-left:3px solid #0f3460;">
-        <div class="edu-header">
-          <h3>目标院校</h3>
-          <span class="edu-date">2027</span>
+      <div class="timeline-card">
+        <div class="timeline-header">
+          <h3 data-i18n="edu-highschool">北京新东方扬州外国语学校 · 国际高中</h3>
+          <span class="timeline-date">2024 – 2027</span>
         </div>
-        <p class="edu-detail">通过 UCAS 申请中</p>
-        <p class="edu-meta">英国 · 电子与电气工程 (EEE) / 香港科技大学 (HKUST) EEE</p>
+        <p class="timeline-detail" data-i18n="edu-highschool-detail">A-Level 课程（Edexcel 考试局）</p>
+        <div class="tag-list"><span>Mathematics</span><span>Further Mathematics</span><span>Physics</span><span>Chemistry</span></div>
+      </div>
+      <div class="timeline-card highlight">
+        <div class="timeline-header">
+          <h3 data-i18n="edu-target">目标院校</h3>
+          <span class="timeline-date">2027</span>
+        </div>
+        <p class="timeline-detail" data-i18n="edu-target-detail">通过 UCAS 申请中</p>
+        <p class="timeline-meta" data-i18n="edu-target-meta">英国 · 电子与电气工程 (EEE) / 香港</p>
       </div>
     </div>
   </section>
 
+  <!-- ===== Achievements ===== -->
   <section id="achievements" class="section">
-    <div class="section-inner">
-      <h2 class="section-title">学术成就</h2>
-      <div class="achievements-grid">
-        <div class="ach-card highlight">
-          <div class="ach-icon">🥇</div>
-          <h3>SMC 英国数学测评 (高级)</h3>
-          <p class="ach-result">全球金奖 · 学校最佳</p>
-          <p class="ach-detail">2025 年 10 月</p>
+    <div class="container">
+      <h2 class="section-title" data-i18n="ach-title">学术成就</h2>
+      <div class="card-grid cols-3">
+        <div class="card center">
+          <div class="card-icon">🥇</div>
+          <h3 data-i18n="ach1-title">SMC 英国数学测评</h3>
+          <p class="highlight-text" data-i18n="ach1-result">全球金奖 · 学校最佳</p>
+          <p class="muted-text">2025.10</p>
         </div>
-        <div class="ach-card">
-          <div class="ach-icon">🥇</div>
-          <h3>SPC Online 英国物理测评 (高级)</h3>
-          <p class="ach-result">全球金奖</p>
-          <p class="ach-detail">2026 年 2 月</p>
+        <div class="card center">
+          <div class="card-icon">🥇</div>
+          <h3 data-i18n="ach2-title">SPC Online 英国物理测评</h3>
+          <p class="highlight-text" data-i18n="ach2-result">全球金奖</p>
+          <p class="muted-text">2026.02</p>
         </div>
-        <div class="ach-card">
-          <div class="ach-icon">🥇</div>
-          <h3>JPC 英国物理挑战赛 (初级)</h3>
-          <p class="ach-result">全球金奖</p>
-          <p class="ach-detail">2023 年 12 月</p>
+        <div class="card center">
+          <div class="card-icon">🥇</div>
+          <h3 data-i18n="ach3-title">JPC 英国物理挑战赛</h3>
+          <p class="highlight-text" data-i18n="ach3-result">全球金奖</p>
+          <p class="muted-text">2023.12</p>
         </div>
-        <div class="ach-card">
-          <div class="ach-icon">🥈</div>
-          <h3>Physics Bowl 物理杯 Div 2</h3>
-          <p class="ach-result">33 分 · 全球银奖</p>
-          <p class="ach-detail">2026 年 3 月</p>
+        <div class="card center">
+          <div class="card-icon">🥈</div>
+          <h3 data-i18n="ach4-title">Physics Bowl 物理杯 Div 2</h3>
+          <p class="highlight-text" data-i18n="ach4-result">33 分 · 全球银奖</p>
+          <p class="muted-text">2026.03</p>
         </div>
-        <div class="ach-card">
-          <div class="ach-icon">🏅</div>
-          <h3>Hippo 河马英语测评</h3>
-          <p class="ach-result">一等奖</p>
-          <p class="ach-detail">2024 年 3 月</p>
+        <div class="card center">
+          <div class="card-icon">🏅</div>
+          <h3 data-i18n="ach5-title">Hippo 河马英语测评</h3>
+          <p class="highlight-text" data-i18n="ach5-result">一等奖</p>
+          <p class="muted-text">2024.03</p>
         </div>
-        <div class="ach-card">
-          <div class="ach-icon">🔬</div>
-          <h3>香港大学理科综合项目</h3>
-          <p class="ach-detail">2026 年 2 月</p>
-          <p class="ach-detail">AI 与建筑课程 · 结课报告</p>
+        <div class="card center">
+          <div class="card-icon">🔬</div>
+          <h3 data-i18n="ach6-title">香港大学理科综合项目</h3>
+          <p class="muted-text">2026.02</p>
+          <p class="muted-text" data-i18n="ach6-detail">AI 与建筑课程 · 结课报告</p>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ===== Projects ===== -->
   <section id="projects" class="section section-alt">
-    <div class="section-inner">
-      <h2 class="section-title">项目</h2>
-      <div class="projects-grid">
-        <div class="proj-card">
-          <div class="proj-icon">🐑</div>
-          <h3>FLUFFY 羊羊乐</h3>
-          <p class="proj-desc">休闲消除类小游戏，类似《羊了个羊》。使用 Godot 4.6 开发，包含渐进难度、计时评分、玩家档案等完整功能。实现反向配对放置算法保证初始布局可解。已准备上架 Google Play。</p>
-          <div class="proj-tags">
-            <span>Godot</span>
-            <span>GDScript</span>
-            <span>Android</span>
-          </div>
+    <div class="container">
+      <h2 class="section-title" data-i18n="proj-title">项目</h2>
+      <div class="card-grid cols-2">
+        <div class="card">
+          <div class="card-icon">🐑</div>
+          <h3 data-i18n="proj1-title">FLUFFY 羊羊乐</h3>
+          <p class="desc" data-i18n="proj1-desc">Godot 4.6 休闲消除游戏，类似《羊了个羊》。实现反向配对放置算法保证初始布局可解，含渐进难度、计时评分、玩家档案、BGM 控制。已开源在 GitHub，准备上架 Google Play。</p>
+          <div class="tag-list"><span>Godot</span><span>GDScript</span><span>Android</span></div>
         </div>
-        <div class="proj-card">
-          <div class="proj-icon">📱</div>
-          <h3>安卓游戏 FLUFFY</h3>
-          <p class="proj-desc">使用 Godot 4.6 + GDScript 开发的休闲消除游戏，玩法类似《羊了个羊》。实现反向配对放置算法确保布局可解，含难度递增、计时评分、玩家档案、BGM 控制等功能。已开源。</p>
-          <div class="proj-tags">
-            <span>Godot</span>
-            <span>GDScript</span>
-            <span>Android</span>
-          </div>
+        <div class="card">
+          <div class="card-icon">🖥️</div>
+          <h3 data-i18n="proj3-title">PC 硬件组装 & 系统定制</h3>
+          <p class="desc" data-i18n="proj3-desc">从零组装 Xeon X5675 + RTX2070 工作站。精通 Windows/Linux/macOS 优化、iOS 越狱、Android ROOT、OpenWrt 旁路由 + Clash 代理。</p>
+          <div class="tag-list"><span>硬件</span><span>Linux</span><span>OpenWrt</span></div>
         </div>
-        <div class="proj-card">
-          <div class="proj-icon">🖥️</div>
-          <h3>PC 硬件组装 & 系统定制</h3>
-          <p class="proj-desc">从零选购配件组装高性能 PC（Xeon X5675 + RTX2070）。精通多平台系统：Windows/Linux/macOS 安装优化、iOS 越狱与 Misaka 修改、Android ROOT 及国产系统精简、OpenWrt 旁路由搭建 + Clash 全局代理。</p>
-          <div class="proj-tags">
-            <span>硬件</span>
-            <span>Linux</span>
-            <span>OpenWrt</span>
-          </div>
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <h3 data-i18n="proj4-title">树莓派 & 网络基础设施</h3>
+          <p class="desc" data-i18n="proj4-desc">树莓派 4B 无头服务器 + Pi-hole 广告拦截 + XRDP 远程桌面。全平台代理方案：Clash / V2Ray / Shadowrocket 配置与调优。</p>
+          <div class="tag-list"><span>Raspberry Pi</span><span>网络</span><span>代理</span></div>
         </div>
-        <div class="proj-card">
-          <div class="proj-icon">🌐</div>
-          <h3>树莓派 & 网络基础设施</h3>
-          <p class="proj-desc">将树莓派 4B 配置为无头服务器，实现 XRDP 远程桌面访问与 Pi-hole 网络广告拦截。研究代理工具底层原理，在 iOS/Android/Windows/macOS/Linux 全平台配置 Clash、V2Ray、Shadowrocket。</p>
-          <div class="proj-tags">
-            <span>Raspberry Pi</span>
-            <span>网络</span>
-            <span>代理</span>
-          </div>
+        <div class="card placeholder-card">
+          <span class="big-dots">···</span>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ===== Skills ===== -->
   <section id="skills" class="section">
-    <div class="section-inner">
-      <h2 class="section-title">技能</h2>
-      <div class="skills-grid">
-        <div class="skill-group">
-          <h3>编程语言</h3>
-          <div class="skill-items">
-            <span>Kotlin</span>
-            <span>Python</span>
-            <span>GDScript</span>
-            <span>JavaScript</span>
-          </div>
+    <div class="container">
+      <h2 class="section-title" data-i18n="skills-title">技能</h2>
+      <div class="card-grid cols-2" style="margin-bottom:32px;">
+        <div class="card skill-frame">
+          <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:14px;" data-i18n="skills-lang">编程语言</h3>
+          <div class="skill-blocks"><span>Python</span><span>Kotlin</span><span>GDScript</span><span>JavaScript</span></div>
         </div>
-        <div class="skill-group">
-          <h3>开发工具</h3>
-          <div class="skill-items">
-            <span>Android Studio</span>
-            <span>Godot</span>
-            <span>Git</span>
-            <span>Linux</span>
-          </div>
+        <div class="card skill-frame">
+          <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:14px;" data-i18n="skills-ai">AI 编程</h3>
+          <div class="skill-blocks"><span>Claude Code</span><span>Codex</span><span>Cursor</span></div>
         </div>
-        <div class="skill-group">
-          <h3>硬件</h3>
-          <div class="skill-items">
-            <span>电脑组装</span>
-            <span>刷机 (9008 等)</span>
-            <span>树莓派</span>
-            <span>macOS 管理</span>
-          </div>
+        <div class="card skill-frame">
+          <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:14px;" data-i18n="skills-tools">开发工具</h3>
+          <div class="skill-blocks"><span>Android Studio</span><span>Godot</span><span>Git</span><span>Linux</span></div>
         </div>
-        <div class="skill-group">
-          <h3>语言</h3>
-          <div class="skill-items">
-            <span>中文 (母语)</span>
-            <span>英语 (IELTS 备考)</span>
-          </div>
+        <div class="card skill-frame">
+          <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:14px;" data-i18n="skills-hardware">硬件</h3>
+          <div class="skill-blocks"><span data-i18n="skill-pc">电脑组装</span><span data-i18n="skill-flash">刷机 (9008 等)</span><span>树莓派</span><span data-i18n="skill-macos">macOS 管理</span></div>
+        </div>
+        <div class="card skill-frame">
+          <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--teal);margin-bottom:14px;" data-i18n="skills-human-lang">语言</h3>
+          <div class="skill-blocks"><span data-i18n="skill-cn">中文 (母语)</span><span data-i18n="skill-en">英语 (IELTS 备考)</span></div>
+        </div>
+        <div class="card placeholder-card">
+          <span class="big-dots">···</span>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ===== Activities ===== -->
   <section id="activities" class="section section-alt">
-    <div class="section-inner">
-      <h2 class="section-title">课外活动</h2>
-      <div class="activities-list">
-        <div class="act-item">
-          <span class="act-date">2026.02</span>
-          <div class="act-content">
-            <h3>香港大学理科综合项目</h3>
-            <p>参加 AI 与建筑课程，与博士生导师黄超互动，了解港大 AI 研究项目 Nanobot（基于 OpenClaw 的轻量级 Agent，可在树莓派上运行）。</p>
-          </div>
+    <div class="container-sm">
+      <h2 class="section-title" data-i18n="act-title">课外活动</h2>
+      <div class="act-row timeline-card" style="display:flex;">
+        <div class="act-icon">🧪</div>
+        <div class="act-body">
+          <h4 data-i18n="act1-title">香港大学理科综合项目</h4>
+          <p data-i18n="act1-desc">参加 AI 与建筑课程，与博士生导师黄超互动，了解港大 AI 研究项目 Nanobot（基于 OpenClaw 的轻量级 Agent，可在树莓派上运行）。</p>
         </div>
-        <div class="act-item">
-          <span class="act-date">2026.02</span>
-          <div class="act-content">
-            <h3>环保宣传与城市绿碳调研（香港）</h3>
-            <p>创新地将街头采访改为 Google Forms 线上问卷 + 二维码扫码方式，大幅提升路人参与度和数据收集效率。</p>
-          </div>
+        <span class="timeline-date">2026</span>
+      </div>
+      <div class="act-row timeline-card" style="display:flex;">
+        <div class="act-icon">🌿</div>
+        <div class="act-body">
+          <h4 data-i18n="act2-title">环保宣传与城市绿碳调研（香港）</h4>
+          <p data-i18n="act2-desc">创新地将街头采访改为 Google Forms 线上问卷 + 二维码扫码方式，大幅提升路人参与度和数据收集效率。</p>
         </div>
-        <div class="act-item">
-          <span class="act-date">2025</span>
-          <div class="act-content">
-            <h3>学生会副主席</h3>
-            <p>全校竞选获第二名，当选学生会副主席。组织国际部 vs 普通部篮球赛（场地布置、物资采购、宣传），负责双旦晚会演出大屏控制。</p>
-          </div>
+        <span class="timeline-date">2026</span>
+      </div>
+      <div class="act-row timeline-card" style="display:flex;">
+        <div class="act-icon">🏛️</div>
+        <div class="act-body">
+          <h4 data-i18n="act3-title">学生会副主席</h4>
+          <p data-i18n="act3-desc">全校竞选获第二名，当选学生会副主席。组织国际部 vs 普通部篮球赛，负责双旦晚会演出大屏控制。</p>
         </div>
-        <div class="act-item">
-          <span class="act-date">2022</span>
-          <div class="act-content">
-            <h3>VEX 机器人社团</h3>
-            <p>在初中参加 FUNCTION 社团，学习编程 VEX 机器人及操控。</p>
-          </div>
+        <span class="timeline-date">2025</span>
+      </div>
+      <div class="act-row timeline-card" style="display:flex;">
+        <div class="act-icon">🤖</div>
+        <div class="act-body">
+          <h4 data-i18n="act4-title">VEX 机器人社团</h4>
+          <p data-i18n="act4-desc">在初中参加 FUNCTION 社团，学习编程 VEX 机器人及操控。</p>
         </div>
-        <div class="act-item">
-          <span class="act-date">2021</span>
-          <div class="act-content">
-            <h3>Apple Teacher 认证</h3>
-            <p>通过在线课程学习 iOS/iPadOS/macOS 底层逻辑和框架，获得 Apple Teacher 认证。</p>
-          </div>
+        <span class="timeline-date">2022</span>
+      </div>
+      <div class="act-row timeline-card" style="display:flex;">
+        <div class="act-icon">🍎</div>
+        <div class="act-body">
+          <h4 data-i18n="act5-title">Apple Teacher 认证</h4>
+          <p data-i18n="act5-desc">通过在线课程学习 iOS/iPadOS/macOS 底层逻辑和框架，获得 Apple Teacher 认证。</p>
         </div>
+        <span class="timeline-date">2021</span>
       </div>
     </div>
   </section>
 
-  <section id="contact" class="section">
-    <div class="section-inner">
-      <h2 class="section-title">联系我</h2>
-      <div class="contact-links">
-        <a href="mailto:shizixian2008@Gmail.com" class="contact-item">
-          <span class="contact-icon">&#x2709;</span>
-          <span>Email</span>
-        </a>
-        <a href="https://github.com/shizixian" target="_blank" class="contact-item">
-          <span class="contact-icon">&#x1F5A5;</span>
-          <span>GitHub</span>
-        </a>
-        <a href="https://x.com/ShiZixianZan" target="_blank" class="contact-item">
-          <span class="contact-icon">&#x1D54F;</span>
-          <span>X (Twitter)</span>
-        </a>
+  <!-- ===== Contact ===== -->
+  <section id="contact" class="section" style="text-align:center;">
+    <div class="container-sm">
+      <h2 class="section-title" data-i18n="contact-title">联系我</h2>
+      <div class="cta-glow">
+        <div class="contact-row" style="margin-top:44px;">
+          <a href="mailto:shizixian2008@Gmail.com" class="contact-pill">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/>
+            </svg>
+            <span>Email</span>
+          </a>
+          <a href="https://github.com/shizixian" target="_blank" class="contact-pill">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+            </svg>
+            <span>GitHub</span>
+          </a>
+          <a href="https://x.com/ShiZixianZan" target="_blank" class="contact-pill">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            <span>X (Twitter)</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
   <footer class="footer">
-    <p>&copy; 2027 史子贤 (Shi Zixian). Built with Codex.</p>
+    <p data-i18n="footer">&copy; 2027 史子贤 (Shi Zixian). Built with Codex.</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    // ===== i18n =====
+    const translations = {
+      zh: {
+        'hero-name': '史子贤', 'hero-sub': 'Shi Zixian',
+        'hero-tagline': 'A-Level 学生 · 硬件极客', 'hero-cta': '了解更多',
+        'about-title': '从十岁开始折腾硬件',
+        'about-subtitle': '北京新东方扬州外国语学校 A-Level 在读，2027 年毕业。多项全球金奖得主，正在通过 UCAS 申请英国及香港的电子与电气工程专业。',
+        'about-p2': '从 10 岁自己动手组装第一台电脑起，我就对硬件和底层系统着迷。这份热情驱动我拿下 SMC 全球金奖（学校最佳）、SPC 全球金奖、JPC 全球金奖、Physics Bowl 全球银奖。',
+        'about-p3': '课余时间用 Kotlin 写 Android 应用、用 Godot 开发独立游戏《FLUFFY 羊羊乐》、组装 Xeon 工作站、给手机刷机越狱、搭 OpenWrt 旁路由。也喜欢折腾树莓派——跑 Pi-hole、XRDP 远程桌面、当无头服务器。',
+        'stat-awards': '学术奖项', 'stat-subjects': 'A-Level 科目',
+        'edu-title': '教育背景',
+        'edu-highschool': '北京新东方扬州外国语学校 · 国际高中',
+        'edu-highschool-detail': 'A-Level 课程（Edexcel 考试局）',
+        'edu-middle': '北京新东方扬州外国语学校 · 国际初中',
+        'edu-primary': '扬州育才实验学校（小学）',
+        'edu-target': '目标院校', 'edu-target-detail': '通过 UCAS 申请中',
+        'edu-target-meta': '英国 · 电子与电气工程 (EEE) / 香港',
+        'ach-title': '学术成就',
+        'ach1-title': 'SMC 英国数学测评', 'ach1-result': '全球金奖 · 学校最佳',
+        'ach2-title': 'SPC Online 英国物理测评', 'ach2-result': '全球金奖',
+        'ach3-title': 'JPC 英国物理挑战赛', 'ach3-result': '全球金奖',
+        'ach4-title': 'Physics Bowl 物理杯 Div 2', 'ach4-result': '33 分 · 全球银奖',
+        'ach5-title': 'Hippo 河马英语测评', 'ach5-result': '一等奖',
+        'ach6-title': '香港大学理科综合项目', 'ach6-detail': 'AI 与建筑课程 · 结课报告',
+        'proj-title': '项目',
+        'proj1-title': 'FLUFFY 羊羊乐',
+        'proj1-desc': 'Godot 4.6 休闲消除游戏，类似《羊了个羊》。实现反向配对放置算法保证初始布局可解，含渐进难度、计时评分、玩家档案、BGM 控制。已开源在 GitHub，准备上架 Google Play。',
+        'proj3-title': 'PC 硬件组装 & 系统定制',
+        'proj3-desc': '从零组装 Xeon X5675 + RTX2070 工作站。精通 Windows/Linux/macOS 优化、iOS 越狱、Android ROOT、OpenWrt 旁路由 + Clash 代理。',
+        'proj4-title': '树莓派 & 网络基础设施',
+        'proj4-desc': '树莓派 4B 无头服务器 + Pi-hole 广告拦截 + XRDP 远程桌面。全平台代理方案：Clash / V2Ray / Shadowrocket 配置与调优。',
+        'skills-title': '技能',
+        'skills-lang': '编程语言', 'skills-ai': 'AI 编程', 'skills-tools': '开发工具',
+        'skills-hardware': '硬件', 'skills-human-lang': '语言',
+        'skill-pc': '电脑组装', 'skill-flash': '刷机 (9008 等)',
+        'skill-macos': 'macOS 管理', 'skill-cn': '中文 (母语)', 'skill-en': '英语 (IELTS 备考)',
+        'act-title': '课外活动',
+        'act1-title': '香港大学理科综合项目',
+        'act1-desc': '参加 AI 与建筑课程，与博士生导师黄超互动，了解港大 AI 研究项目 Nanobot（基于 OpenClaw 的轻量级 Agent，可在树莓派上运行）。',
+        'act2-title': '环保宣传与城市绿碳调研（香港）',
+        'act2-desc': '创新地将街头采访改为 Google Forms 线上问卷 + 二维码扫码方式，大幅提升路人参与度和数据收集效率。',
+        'act3-title': '学生会副主席',
+        'act3-desc': '全校竞选获第二名，当选学生会副主席。组织国际部 vs 普通部篮球赛，负责双旦晚会演出大屏控制。',
+        'act4-title': 'VEX 机器人社团',
+        'act4-desc': '在初中参加 FUNCTION 社团，学习编程 VEX 机器人及操控。',
+        'act5-title': 'Apple Teacher 认证',
+        'act5-desc': '通过在线课程学习 iOS/iPadOS/macOS 底层逻辑和框架，获得 Apple Teacher 认证。',
+        'contact-title': '联系我',
+        'footer': '© 2027 史子贤 (Shi Zixian). Built with Codex.'
+      },
+      en: {
+        'hero-name': 'SHI ZIXIAN', 'hero-sub': '史子贤',
+        'hero-tagline': 'A-Level Student · Hardware Geek', 'hero-cta': 'Learn More',
+        'about-title': 'Tinkering with hardware since age 10',
+        'about-subtitle': 'A-Level student at Beijing New Oriental Yangzhou Foreign Language School, graduating 2027. Multiple global gold medalist, applying to UK and Hong Kong EEE programmes via UCAS.',
+        'about-p2': 'Since building my first PC at age 10, I have been obsessed with hardware and low-level systems. That drive earned me SMC Global Gold (School Best), SPC Global Gold, JPC Global Gold, and Physics Bowl Global Silver.',
+        'about-p3': 'Outside the classroom I write Android apps in Kotlin, build indie games in Godot (FLUFFY), assemble Xeon workstations, jailbreak phones, and configure OpenWrt routers. I also run a Raspberry Pi 4B as a headless server with Pi-hole and XRDP.',
+        'stat-awards': 'Awards', 'stat-subjects': 'A-Level Subjects',
+        'edu-title': 'Education',
+        'edu-highschool': 'Beijing New Oriental Yangzhou Foreign Language School · International High School',
+        'edu-highschool-detail': 'A-Level (Edexcel)',
+        'edu-middle': 'Beijing New Oriental Yangzhou Foreign Language School · International Middle School',
+        'edu-primary': 'Yangzhou Yucai Experimental School (Primary)',
+        'edu-target': 'Target Universities', 'edu-target-detail': 'Applying via UCAS',
+        'edu-target-meta': 'UK · Electronic & Electrical Engineering (EEE) / Hong Kong',
+        'ach-title': 'Achievements',
+        'ach1-title': 'SMC Senior Mathematical Challenge', 'ach1-result': 'Global Gold · School Best',
+        'ach2-title': 'SPC Online Senior Physics Challenge', 'ach2-result': 'Global Gold',
+        'ach3-title': 'JPC Junior Physics Challenge', 'ach3-result': 'Global Gold',
+        'ach4-title': 'Physics Bowl Div 2', 'ach4-result': '33 Points · Global Silver',
+        'ach5-title': 'Hippo English Olympiad', 'ach5-result': 'First Prize',
+        'ach6-title': 'HKU Science Integrated Programme', 'ach6-detail': 'AI & Architecture · Final Report',
+        'proj-title': 'Projects',
+        'proj1-title': 'FLUFFY 羊羊乐',
+        'proj1-desc': 'A casual tile-matching puzzle game built with Godot 4.6. Features a reverse-placement algorithm ensuring solvable layouts, progressive difficulty, timed scoring, player profiles, and BGM controls. Open-sourced on GitHub, ready for Google Play.',
+        'proj3-title': 'PC Assembly & System Customization',
+        'proj3-desc': 'Built a Xeon X5675 + RTX2070 workstation from parts. Proficient in Windows/Linux/macOS optimization, iOS jailbreaking, Android ROOT, OpenWrt bypass routing + Clash proxy.',
+        'proj4-title': 'Raspberry Pi & Network Infrastructure',
+        'proj4-desc': 'Raspberry Pi 4B headless server + Pi-hole ad blocking + XRDP remote desktop. Multi-platform proxy: Clash / V2Ray / Shadowrocket across iOS, Android, Windows, macOS, Linux.',
+        'skills-title': 'Skills',
+        'skills-lang': 'Programming Languages', 'skills-ai': 'AI Coding', 'skills-tools': 'Development Tools',
+        'skills-hardware': 'Hardware', 'skills-human-lang': 'Languages',
+        'skill-pc': 'PC Assembly', 'skill-flash': 'Device Flashing',
+        'skill-macos': 'macOS Admin', 'skill-cn': 'Chinese (Native)', 'skill-en': 'English (IELTS)',
+        'act-title': 'Extracurricular',
+        'act1-title': 'HKU Science Integrated Programme',
+        'act1-desc': 'Participated in AI & Architecture course, interacted with PhD supervisor Huang Chao, learned about HKU AI research project Nanobot — a lightweight agent based on OpenClaw, runnable on Raspberry Pi.',
+        'act2-title': 'Environmental Campaign & Green Carbon Survey (Hong Kong)',
+        'act2-desc': 'Innovatively replaced street interviews with Google Forms surveys + QR code scanning, significantly improving participation and data collection efficiency.',
+        'act3-title': 'Student Council Vice President',
+        'act3-desc': 'Elected 2nd school-wide as Student Council Vice President. Organized inter-department basketball tournaments, managed big-screen control for New Year gala performances.',
+        'act4-title': 'VEX Robotics Club',
+        'act4-desc': 'Participated in the FUNCTION club during middle school, learning to program and control VEX robots.',
+        'act5-title': 'Apple Teacher Certification',
+        'act5-desc': 'Studied iOS/iPadOS/macOS fundamentals and frameworks through online courses, earning Apple Teacher certification.',
+        'contact-title': 'Get in Touch',
+        'footer': '© 2027 史子贤 (Shi Zixian). Built with Codex.'
+      }
+    };
+
+    let currentLang = localStorage.getItem('lang') || 'zh';
+    function applyLanguage(lang) {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
+      });
+      document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+      document.querySelectorAll('[data-lang-label]').forEach(el => {
+        el.classList.toggle('active-lang', el.getAttribute('data-lang-label') === lang);
+      });
+      localStorage.setItem('lang', lang); currentLang = lang;
+    }
+    document.getElementById('langToggle').addEventListener('click', () => applyLanguage(currentLang === 'zh' ? 'en' : 'zh'));
+    applyLanguage(currentLang);
+
+    // ===== GSAP =====
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero entrance — prevent FOUC
+    gsap.set([".hero h1", ".hero-sub", ".hero-tagline", ".btn-primary", ".scroll-down"], { opacity: 0, y: 30 });
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.to(".hero-sub",     { opacity: 1, y: 0, duration: 0.5 })
+      .to(".hero h1",      { opacity: 1, y: 0, duration: 0.9 }, "-=0.3")
+      .to(".hero-tagline", { opacity: 1, y: 0, duration: 0.5 }, "-=0.5")
+      .to(".btn-primary",  { opacity: 1, y: 0, duration: 0.5 }, "-=0.3")
+      .to(".scroll-down",  { opacity: 1, y: 0, duration: 0.4 }, "-=0.2");
+
+    // Mouse parallax
+    const hero = document.querySelector(".hero");
+    if (window.matchMedia("(hover: hover)").matches) {
+      hero.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        gsap.to(".hero-shapes-back", { x: x * 45, y: y * 22, duration: 0.8 });
+        gsap.to(".hero-shapes-mid",  { x: x * 22, y: y * 11, duration: 0.8 });
+        gsap.to(".hero .container",  { x: x * 8,  y: y * 5,  duration: 0.8 });
+      });
+    }
+
+    // Cursor glow — follows mouse across the whole page
+    const glow = document.getElementById('cursorGlow');
+    if (window.matchMedia("(hover: hover)").matches) {
+      document.addEventListener('mousemove', (e) => {
+        if (!glow.classList.contains('visible')) glow.classList.add('visible');
+        gsap.to(glow, { left: e.clientX, top: e.clientY, duration: 0.8, ease: "power2.out" });
+      });
+      document.addEventListener('mouseleave', () => glow.classList.remove('visible'));
+      document.addEventListener('mouseenter', () => glow.classList.add('visible'));
+    }
+
+    // Scroll-triggered card reveals
+    gsap.set(".card, .timeline-card, .stat", { opacity: 0, y: 48, rotateX: 12 });
+    ScrollTrigger.batch(".card, .timeline-card, .stat", {
+      start: "top 85%",
+      onEnter: batch => gsap.to(batch, { opacity: 1, y: 0, rotateX: 0, duration: 0.7, stagger: 0.08, ease: "power2.out" })
+    });
+
+    // Scroll nav arrows — right side, hide on wheel, show when still
+    const scrollNav = document.getElementById('scrollNav');
+    const allSections = gsap.utils.toArray('section');
+    let scrollTimeout;
+    function hideScrollNav() {
+      scrollNav.classList.add('hidden');
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (window.scrollY > window.innerHeight * 0.8) scrollNav.classList.remove('hidden');
+      }, 1500);
+    }
+    window.addEventListener('wheel', hideScrollNav, { passive: true });
+    window.addEventListener('scroll', () => {
+      if (window.scrollY < window.innerHeight * 0.8) scrollNav.classList.add('hidden');
+    });
+    function getCurrentSectionIndex() {
+      const viewMid = window.innerHeight / 2;
+      for (let i = allSections.length - 1; i >= 0; i--) {
+        const rect = allSections[i].getBoundingClientRect();
+        if (rect.top < viewMid) return i;
+      }
+      return 0;
+    }
+    document.getElementById('scrollDown').addEventListener('click', () => {
+      const idx = getCurrentSectionIndex();
+      const next = Math.min(idx + 1, allSections.length - 1);
+      allSections[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      hideScrollNav();
+    });
+    document.getElementById('scrollUp').addEventListener('click', () => {
+      const idx = getCurrentSectionIndex();
+      const prev = Math.max(idx - 1, 1); // never scroll above hero
+      allSections[prev].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      hideScrollNav();
+    });
+    setTimeout(() => { if (window.scrollY > window.innerHeight * 0.8) scrollNav.classList.remove('hidden'); }, 2000);
+
+    // Section titles
+    gsap.set(".section-title", { opacity: 0, y: 20 });
+    ScrollTrigger.batch(".section-title", {
+      start: "top 92%",
+      onEnter: batch => gsap.to(batch, { opacity: 1, y: 0, duration: 0.6, stagger: 0.06, ease: "power2.out" })
+    });
+  </script>
 </body>
 </html>
