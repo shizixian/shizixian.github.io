@@ -296,21 +296,60 @@
       .card-grid.cols-3, .card-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
       .about-grid { flex-direction: column; gap: 32px; }
       .about-stats { justify-content: center; }
-      .section { padding: 80px 24px; }
+      .section { padding: 72px 20px; }
+      .hero h1 { font-size: clamp(44px, 10vw, 64px); }
+      .hero-sub { font-size: 17px; }
+      .hero-tagline { font-size: 15px; }
+      .section-title { font-size: clamp(28px, 6vw, 42px); }
+      .section-subtitle { font-size: 15px; max-width: 100%; }
+      .scroll-nav { right: 8px; gap: 8px; }
+      .scroll-nav button { width: 34px; height: 34px; }
+      .cursor-glow { width: 300px; height: 300px; }
+      .timeline-card { padding: 20px 22px; }
+      .stat { padding: 20px 20px; min-width: 80px; }
+      .stat-num { font-size: 26px; }
     }
     @media (max-width: 580px) {
       .card-grid.cols-2, .card-grid.cols-3, .card-grid.cols-4 { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 44px; }
-      .section-title { font-size: 30px; }
-      .timeline-header { flex-direction: column; gap: 4px; }
-      .timeline-date { margin-left: 0; }
-      .contact-row { flex-direction: column; align-items: center; }
-      .lang-nav { padding: 14px 16px; }
+      .section { padding: 56px 16px; }
+      .hero { min-height: 100vh; padding: 0 16px; }
+      .hero h1 { font-size: 38px; }
+      .hero-sub { font-size: 15px; margin-bottom: 4px; }
+      .hero-tagline { font-size: 14px; margin-bottom: 32px; }
+      .section-title { font-size: 26px; margin-bottom: 32px; }
+      .section-subtitle { font-size: 14px; margin-bottom: 36px; }
+      .about-text p { font-size: 14px; }
+      .timeline-header { flex-direction: column; gap: 4px; align-items: flex-start; }
+      .timeline-date { margin-left: 0; min-width: auto; }
+      .act-row { flex-direction: column; gap: 12px; }
+      .act-row .act-icon { width: 36px; height: 36px; font-size: 20px; }
+      .contact-row { flex-direction: column; align-items: stretch; }
+      .contact-pill { justify-content: center; }
+      .lang-nav { padding: 10px 12px; }
+      .lang-toggle { padding: 6px 12px; font-size: 12px; gap: 6px; }
+      .btn-primary { padding: 14px 32px; font-size: 15px; width: 100%; }
+      .scroll-nav { right: 4px; gap: 6px; }
+      .scroll-nav button { width: 30px; height: 30px; }
+      .scroll-nav button svg { width: 14px; height: 14px; }
+      .cursor-glow { display: none; }
+      .hero-shapes-back .shape-a { width: 250px; height: 250px; }
+      .hero-shapes-back .shape-b { width: 160px; height: 160px; }
+      .hero-shapes-mid .shape-c { width: 100px; height: 100px; }
+      .hero-shapes-mid .shape-d { width: 70px; height: 70px; }
+      .achievements-grid, .card-grid { gap: 12px; }
+      .card { padding: 22px 18px; }
+      .card.center { padding: 20px 16px; }
+      .card-icon { font-size: 28px; }
+      .card h3 { font-size: 15px; }
+      .card p.desc { font-size: 13px; }
+      .cta-glow::before { inset: -20px; }
+      .footer { padding: 24px 16px; font-size: 12px; }
     }
     @media (prefers-reduced-motion: reduce) {
       .hero-shapes-back *, .hero-shapes-mid * { animation: none; }
       .scroll-down { animation: none; }
       .card, .stat, .timeline-card, .contact-pill, .btn-primary { transition: none; }
+      .cursor-glow { display: none; }
     }
   </style>
 </head>
